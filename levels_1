@@ -1,0 +1,28 @@
+//@version=5
+indicator("Max Min Lines", "", true)
+
+// создаем пустой список, куда будут помещаться значения максимумов и минимумов свечей .
+
+float[] priceList = array.new_float(0)
+
+// Собираем значения ценовых максимумов и минимумов последних 200 свечей, помещая их в список priceList 
+for i = 0 to 199
+    array.push(priceList, high[i])
+    array.push(priceList, low[i])
+
+// Создаем два вспомогательных списка для сбора повторяющихся значений
+float[] duplicates = array.new_float(0)
+float[] lineValues = array.new_float(0)
+
+// Проходимся по элементам списка priceList, и помещаем повторяющиеся значения списка priceList в список lineValues
+for i = 0 to array.size(priceList) - 1
+    value = array.get(priceList, i)
+    if array.includes(duplicates, value)
+        array.push(lineValues, value)
+    else
+        array.push(duplicates, value)
+
+// Рисуем горизонтальную линию на уровне первого значения из списка lineValues
+plot(array.get(lineValues, 0), color = color.fuchsia, linewidth = 2, style = plot.style_line)
+    
+
